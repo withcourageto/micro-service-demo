@@ -1,0 +1,22 @@
+server:
+  context-path: /blog
+  port: 8031
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-db-blog-blog:3306/b_blog
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${MYSQL_USER_NAME}
+    password: ${MYSQL_USER_PWD}
+
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://auth-service:8051/uaa/users/current
+    client:
+      client-id: blog-service
+      client-secret: blog-service
+      access-token-uri: http://auth-service:8051/uaa/oauth/token
+      grant-type: client_credentials
+      scope:
+        - server

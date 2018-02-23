@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: auth-service
+  cloud:
+    config:
+      uri: http://config:9001
+      username: ${CONFIG_SERVICE_USERNAME}
+      password: ${CONFIG_SERVICE_PASSWORD}
+      fail-fast: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000

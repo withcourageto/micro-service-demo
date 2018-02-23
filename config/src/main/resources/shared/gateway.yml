@@ -1,0 +1,42 @@
+server:
+  port: 8010
+
+zuul:
+  ignored-services: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  routes:
+    blog-service:
+      path: /blog/**
+      serviceId: blog-service
+      sensitiveHeaders:
+      stripPrefix: false
+
+    user-service:
+      path: /user/**
+      serviceId: user-service
+      sensitiveHeaders:
+      stripPrefix: false
+
+    auth-service:
+      path: /uaa/**
+      serviceId: auth-service
+      sensitiveHeaders:
+      stripPrefix: false
+  add-proxy-headers: true
+
+
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:8080/uaa/oauth/token
+      user-authorization-uri: http://localhost:8080/uaa/oauth/authorize
+      client-id: webapp
+
+
+
+
+
+
+

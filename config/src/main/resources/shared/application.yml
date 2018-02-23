@@ -1,0 +1,13 @@
+#所有服务(包括注册中心)共享配置
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:8701/eureka/
+
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://auth-service:8051/uaa/users/current
+

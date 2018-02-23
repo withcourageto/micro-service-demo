@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    config:
+      uri: http://config:9001
+      username: ${CONFIG_SERVICE_USERNAME}
+      password: ${CONFIG_SERVICE_PASSWORD}
+      fail-fast: true

@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Implementation-Title: config
+Implementation-Version: 0.0.1-SNAPSHOT
+Archiver-Version: Plexus Archiver
+Built-By: thomas
+Implementation-Vendor-Id: top.cmoon.mico-service.blog
+Spring-Boot-Version: 1.5.9.RELEASE
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: top.cmoon.micoservice.blog.config.ConfigApplication
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Created-By: Apache Maven 3.5.2
+Build-Jdk: 1.8.0_151
+Implementation-URL: http://projects.spring.io/spring-boot/config/
+

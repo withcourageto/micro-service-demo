@@ -1,0 +1,121 @@
+version: '3.0'
+
+services:
+  config:
+    environment:
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: config
+    restart: always
+    ports:
+      - "9001:9001"
+
+  service-registry:
+    environment:
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: service-registry
+    restart: on-failure
+    depends_on:
+      - config
+    ports:
+      - "8701:8701"
+      - "8705:8705"
+
+  user-service:
+    environment:
+      MYSQL_USER_NAME: ${USER_DB_USER_NAME}
+      MYSQL_USER_PWD: ${USER_DB_PASSWORD}
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: user-service
+    depends_on:
+      - config
+      - mysql-db-blog-user
+      - service-registry
+    ports:
+      - "8025:8025"
+      - "8021:8021"
+    expose:
+      - "8021"
+
+  blog-service:
+    environment:
+      MYSQL_USER_NAME: ${BLOG_DB_USER_NAME}
+      MYSQL_USER_PWD: ${BLOG_DB_PASSWORD}
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: blog-service
+    depends_on:
+      - config
+      - service-registry
+      - mysql-db-blog-blog
+    ports:
+      - "8031:8031"
+      - "8035:8035"
+
+  auth-service:
+    environment:
+      USER_SERVICE_PASSWORD: $USER_SERVICE_PASSWORD
+      BLOG_SERVICE_PASSWORD: $BLOG_SERVICE_PASSWORD
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      MYSQL_USER: ${USER_DB_USER_NAME}
+      MYSQL_PASSWORD: ${USER_DB_PASSWORD}
+    build: auth-service
+    depends_on:
+      - config
+      - service-registry
+      - redis-server
+      - mysql-db-blog-user
+    ports:
+      - "8051:8051"
+      - "8055:8055"
+
+  dashboard:
+    environment:
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: dashboard
+    restart: on-failure
+    depends_on:
+      - config
+      - service-registry
+    ports:
+      - "8040:8040"
+
+  gateway:
+    environment:
+      CONFIG_SERVICE_USERNAME: $CONFIG_SERVICE_USERNAME
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build: gateway
+    restart: on-failure
+    depends_on:
+      - config
+      - service-registry
+    ports:
+      - "8080:8010"
+
+  mysql-db-blog-user:
+    build: mysql-user-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: blog_user
+      MYSQL_USER: ${USER_DB_USER_NAME}
+      MYSQL_PASSWORD: ${USER_DB_PASSWORD}
+
+  mysql-db-blog-blog:
+    build: mysql-blog-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: b_blog
+      MYSQL_USER: ${BLOG_DB_USER_NAME}
+      MYSQL_PASSWORD: ${BLOG_DB_PASSWORD}
+
+  redis-server:
+    image: redis
+    restart: on-failure
+    ports:
+      - "6379:6379"
