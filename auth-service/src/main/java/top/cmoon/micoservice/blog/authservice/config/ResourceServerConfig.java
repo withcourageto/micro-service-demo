@@ -15,12 +15,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http.csrf().disable()
-            .exceptionHandling()
-                .authenticationEntryPoint((req,resp,ex)->resp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-            .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, resp, ex) -> resp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .httpBasic();
         // @formatter:on
     }

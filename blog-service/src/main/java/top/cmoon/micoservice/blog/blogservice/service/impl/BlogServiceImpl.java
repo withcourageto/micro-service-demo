@@ -1,11 +1,14 @@
 package top.cmoon.micoservice.blog.blogservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import top.cmoon.micoservice.blog.blogservice.client.UserServiceClient;
 import top.cmoon.micoservice.blog.blogservice.dao.BlogRepository;
 import top.cmoon.micoservice.blog.blogservice.domain.User;
+import top.cmoon.micoservice.blog.blogservice.event.BlogAddedEvent;
 import top.cmoon.micoservice.blog.blogservice.model.Blog;
+import top.cmoon.micoservice.blog.blogservice.msg.MsgSender;
 import top.cmoon.micoservice.blog.blogservice.service.BlogService;
 import top.cmoon.micoservice.blog.blogservice.util.DateUtil;
 
@@ -22,6 +25,13 @@ public class BlogServiceImpl implements BlogService {
 
     @Autowired
     private UserServiceClient userServiceClient;
+
+    @Autowired
+    private MsgSender msgSender;
+
+
+    @Autowired
+    private ApplicationContext context;
 
 
     @Override
@@ -47,6 +57,12 @@ public class BlogServiceImpl implements BlogService {
 
         // persistence
         blogRepository.save(blog);
+
+        // 博客添加事件
+        BlogAddedEvent blogAddedEvent = new BlogAddedEvent(this, blog);
+
+        context.publishEvent(blogAddedEvent);
+
         return blog;
     }
 

@@ -17,6 +17,11 @@
         <module>gateway</module>
         <module>dashboard</module>
         <module>auth-service</module>
+        <module>common</module>
     </modules>
+
+    <build>
+        <plugins></plugins>
+    </build>
 
 </project>

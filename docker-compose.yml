@@ -1,4 +1,4 @@
-version: '3.0'
+version: '2.0'
 
 services:
   config:
@@ -50,6 +50,8 @@ services:
       - config
       - service-registry
       - mysql-db-blog-blog
+      - rabbit-server
+      - auth-service
     ports:
       - "8031:8031"
       - "8035:8035"
@@ -119,3 +121,20 @@ services:
     restart: on-failure
     ports:
       - "6379:6379"
+
+  rabbit-server:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  web-app:
+    build: web-app
+    ports:
+      - "80:80"
+    volumes:
+      - ./web-app/src:/usr/share/nginx/html
+    environment:
+      - NGINX_PORT=80
+      - NGINX_HOST=www.cmoon.top
+    command: nginx -g 'daemon off;'

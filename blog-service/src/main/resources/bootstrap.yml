@@ -7,7 +7,17 @@ spring:
       username: ${CONFIG_SERVICE_USERNAME}
       password: ${CONFIG_SERVICE_PASSWORD}
       fail-fast: true
-
+    stream:
+      bindings:
+        input:
+          destination: testStreamQueue
+          contentType: text/plain
+        output:
+          destination: testStreamQueue
+          contentType: text/plain
+  rabbitmq:
+    host: rabbit-server
+    port: 5672
 
 hystrix:
   command:
